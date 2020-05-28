@@ -1,0 +1,27 @@
+Configuration Integrity Verification
+
+Version: 0.2
+About
+
+This implementation provides the first attempt on demonstrating CIV by using two attestation schemes:
+
+    Attestation by Proof
+    Attestation by Quote
+
+This is the first implementation and is strictly for proof of concept. In this version the orchestrator "deploys" a single VM. In the main file the two schemes are demonstrated by calling the attestation request on the VM, first via qoute and secondly via proof.
+
+In version 0.2 all crypto operations on the orchestrator has been moved to the host. Further, it is now possible to re-measure the VMs. This is possible since each VM managed by the orchestrator has orchestrator-manged Virtual Platform Configuration Registers (vPCRs). If the orchestrator asks the VM to do a PCR Extend with a certain file, the orchestrator extends the vPCRs with the expected hash as well. Both the quote and attestation key scheme uses the vPCRs to calculate policy digests and expected quote values.
+Dependencies
+
+IBM TSS
+IBM TPM or a Hardware TPM (Not tested!)
+OpenSSL (required by IBM TSS)
+Build
+
+Included in the project is a Visual Studio project and a CMakeLists.txt. Either can be used to build the project. If running on Windows, make sure the ibmtss.dll file is located in the same folder as the executable.
+
+If using CMakeLists.txt then remember to update the path to IBM TSS includes. The same goes for the Visual Studio project, remember to update library and include path.
+Active Issues
+
+    Endorsement Key for VMs are just a key under the attestation primary key.
+    No marshal/unmarshalling is beign done of messages to and from VMs In general, this version is strictly to identify the phases and commands necessary to achieve the goal of attestation.
