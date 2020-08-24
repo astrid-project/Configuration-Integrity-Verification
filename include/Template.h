@@ -1,4 +1,3 @@
-
 #ifndef TEMPLATE_H
 #define TEMPLATE_H
 #include "ibmtss/TPM_Types.h"
