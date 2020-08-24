@@ -1,28 +1,23 @@
 #ifndef VMSTRUCTURE_H
 #define VMSTRUCTURE_H
 
+#include <cstring>
 #include "VirtualMachine.h"
 struct VMStructure {
-	VMStructure(VirtualMachine& machine, const int ids) : vm(machine), id(ids) 
+	VMStructure(VirtualMachine& machine, const int ids, TpmManager* tpm, TSS_CONTEXT* ctx) : vm(machine), id(ids)
 	{
-		//PCR 1-16 is all zeroes 
-		for (int pcr = 0; pcr < 17; pcr++) {
-			for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
-				vPCR[pcr][i] = 0x00; 
-			}
+
+	    // These values of course depend on current TPM Status, we just read the current values.
+
+		int pcr = 0;
+		int maxPCR = 24;
+
+		for(pcr = 0; pcr < maxPCR; pcr++){
+		    auto out = tpm->readPCR(ctx,pcr);
+		    memcpy(vPCR[pcr],out.pcrValues.digests[0].t.buffer,SHA256_DIGEST_SIZE);
 		}
 
-		//PCR 17-23 is all ff 
-		for (int pcr = 17; pcr < 23; pcr++) {
-			for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
-				vPCR[pcr][i] = 0xff;
-			}
-		}
 
-		// PCR 24 is all zeroes
-		for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
-			vPCR[23][i] = 0x00;
-		}
 	}
 
 	VirtualMachine vm; 
