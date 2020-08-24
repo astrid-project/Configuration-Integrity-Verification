@@ -3,6 +3,7 @@
 #include "ibmtss/TPM_Types.h"
 #include <cstdarg>
 
+
 class PCRSelector {
 public:
     PCRSelector(TPMI_ALG_HASH hashAlg) {
